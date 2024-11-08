@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 running = True
 GREEN = (0,  255,  0)
 BLACK = (0,  0,  0)
@@ -8,6 +9,8 @@ WIDTH = 500 #YOUR WIDTH
 HEIGHT = 500 #YOUR HEIGHT
 velocityX = 0 #pixels per frame : not needed but fun to have
 velocityY = 0
+startTime = time.time()
+elapsedTime = 0
 score = 0
 tab = pygame.display.set_mode((WIDTH, HEIGHT)) #window width and height
 pygame.init()
@@ -41,7 +44,7 @@ class snake(pygame.sprite.Sprite):
       self.rect = self.image.get_rect()
       self.rect.center = (WIDTH/2, HEIGHT/2)
       self.position = list(self.rect.center)
-      self.lastpos = self.position
+      self.lastpos = [0,0]
       self.velocityX = 0
       self.velocityY = 0
    def update(self):
@@ -75,13 +78,11 @@ class snake(pygame.sprite.Sprite):
             if key[pygame.K_LEFT]:self.position[0] -= 10
             if key[pygame.K_UP]:self.position[1] -= 10
             if key[pygame.K_DOWN]:self.position[1] += 10
-        print("Current position: " + str(self.position))
-        print("Last Position: " + str(self.lastpos))
+        # print("Current position: " + str(self.position))
+        # print("Last Position: " + str(self.lastpos))
         self.velocityX = (self.lastpos[0] - self.position[0]) / FPS
         self.velocityY = (self.lastpos[1] - self.position[1]) / FPS
-def Logic(player: snake):
-    
-    pass
+
   
 # class Player(pygame.sprite.Sprite):
 #  #your Character
@@ -130,13 +131,19 @@ while (running):
     food.add(apple)
     score += 1
  
- snakePlayer.lastpos = snakePlayer.position
+    
  for event in pygame.event.get():
          if event.type == pygame.QUIT:
              running = False
  all_sprites.update() #updates screen
- print("vX: " + str(velocityX) + "\nvY: " + str(velocityY))
  
+ elapsedTime = time.time() - startTime
+ if (elapsedTime >= 5):
+    print("Current position: " + str(snakePlayer.position))
+    print("Last Position: " + str(snakePlayer.lastpos))
+    print("vX: " + str(snakePlayer.velocityX) + "\nvY: " + str(snakePlayer.velocityY))
+    startTime = time.time()
+    snakePlayer.lastpos = snakePlayer.position
  tab.fill('white')
  all_sprites.draw(tab) #adds all sprites to the screen
  pygame.display.flip()
