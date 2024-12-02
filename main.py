@@ -7,8 +7,7 @@ BLACK = (0,  0,  0)
 FPS = 30
 WIDTH = 500 #YOUR WIDTH
 HEIGHT = 500 #YOUR HEIGHT
-velocityX = 0 #pixels per frame : not needed but fun to have
-velocityY = 0
+lastpos = [0,0]
 startTime = time.time()
 elapsedTime = 0
 score = 0
@@ -48,9 +47,6 @@ class snake(pygame.sprite.Sprite):
       self.velocityX = 0
       self.velocityY = 0
    def update(self):
-        
-        
-        
         key = pygame.key.get_pressed()
         if(self.rect.x >= (WIDTH)):
             print("HIT EDGE")
@@ -70,6 +66,7 @@ class snake(pygame.sprite.Sprite):
             print("HIT EDGE")
             pass
         else:
+            
             if key[pygame.K_RIGHT]:self.rect.x += 10
             if key[pygame.K_LEFT]:self.rect.x -= 10
             if key[pygame.K_UP]:self.rect.y -= 10
@@ -80,8 +77,8 @@ class snake(pygame.sprite.Sprite):
             if key[pygame.K_DOWN]:self.position[1] += 10
         # print("Current position: " + str(self.position))
         # print("Last Position: " + str(self.lastpos))
-        self.velocityX = (self.lastpos[0] - self.position[0]) / FPS
-        self.velocityY = (self.lastpos[1] - self.position[1]) / FPS
+        self.velocityX = (lastpos[0] - self.position[0]) / FPS
+        self.velocityY = (lastpos[1] - self.position[1]) / FPS
 
   
 # class Player(pygame.sprite.Sprite):
@@ -130,20 +127,22 @@ while (running):
     all_sprites.add(apple)
     food.add(apple)
     score += 1
+    lastpos = snakePlayer.position
  
     
  for event in pygame.event.get():
          if event.type == pygame.QUIT:
              running = False
- all_sprites.update() #updates screen
+ 
  
  elapsedTime = time.time() - startTime
  if (elapsedTime >= 5):
     print("Current position: " + str(snakePlayer.position))
-    print("Last Position: " + str(snakePlayer.lastpos))
+    print("Last Position: " + str(lastpos))
     print("vX: " + str(snakePlayer.velocityX) + "\nvY: " + str(snakePlayer.velocityY))
     startTime = time.time()
-    snakePlayer.lastpos = snakePlayer.position
+
+ all_sprites.update() #updates screen   
  tab.fill('white')
  all_sprites.draw(tab) #adds all sprites to the screen
  pygame.display.flip()
